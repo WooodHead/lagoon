@@ -270,10 +270,16 @@ data:
       </record>
     </filter>
 
-    # DEBUG DELETE ME
-    <match lagoon.*.lagoon>
-      @type stdout
-    </match>
+    #
+    # add the lagoon index_name
+    # the source for this tag is included when lagoonLogs.enabled is true
+    #
+    <filter lagoon.*.lagoon>
+      @type record_modifier
+      <record>
+        index_name lagoon-logs-_-${record['project']}-_-all_environments-_-${Time.at(time).strftime("%Y.%m")}
+      </record>
+    </filter>
 
     #
     # forward all to logs-concentrator
