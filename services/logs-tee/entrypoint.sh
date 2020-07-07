@@ -5,6 +5,7 @@
 # - assumes the remaining arguments are UDP endpoints
 # - duplicates received traffic to each UDP endpoints
 # - ensures that each defined endpoint resolves before starting
+# - echoes to STDOUT if $DEBUG is set to "true"
 
 set -euo pipefail
 set -x
@@ -20,5 +21,9 @@ for endpoint in "$@"; do
 	done
 	cmd="$cmd >(socat -u - udp-sendto:$endpoint)"
 done
+
+if [[ ${DEBUG:-} != true ]]; then
+	cmd="$cmd > /dev/null"
+fi
 
 eval "$cmd"
