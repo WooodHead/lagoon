@@ -10,7 +10,7 @@
 set -euo pipefail
 set -x
 
-cmd="socat -u udp-recvfrom:$1,fork - | tee"
+cmd="socat -b 65507 -u udp-recvfrom:$1,fork - | tee"
 
 shift
 
@@ -19,7 +19,7 @@ for endpoint in "$@"; do
 		echo "${endpoint/:[0-9]*/} doesn't resolve. retrying in 2 seconds.."
 		sleep 2
 	done
-	cmd="$cmd >(socat -u - udp-sendto:$endpoint)"
+	cmd="$cmd >(socat -b 65507 -u - udp-sendto:$endpoint)"
 done
 
 if [[ ${DEBUG:-} != true ]]; then
